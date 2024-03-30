@@ -1,3 +1,6 @@
+DB_RAW_DATA_SCHEMA = 'raw'
+DB_PROCESSED_DATA_SCHEMA = 'processed'
+
 ECONOMIC_DATA_TABLE_NAME = 'economic_data'
 ECONOMIC_DATA_TABLE_SCHEMA = {
     'indicator_id': 'VARCHAR(50)',

@@ -2,6 +2,7 @@ from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.techindicators import TechIndicators
 from dotenv import load_dotenv
 from utils.constants import (
+    DB_RAW_DATA_SCHEMA,
     INTRADAY_STOCK_DATA_TABLE_NAME,
     INTRADAY_STOCK_DATA_TABLE_SCHEMA,
     INTRADAY_STOCK_DATA_TABLE_CONSTRAINTS,
@@ -31,15 +32,17 @@ conn = get_db_connection()
 # Create tables with the defined schemas
 create_table_with_schema(
     connection=conn,
-    table_name=INTRADAY_STOCK_DATA_TABLE_NAME,
-    schema=INTRADAY_STOCK_DATA_TABLE_SCHEMA,
+    db_schema=DB_RAW_DATA_SCHEMA,
+    db_table_name=INTRADAY_STOCK_DATA_TABLE_NAME,
+    db_table_schema_definition=INTRADAY_STOCK_DATA_TABLE_SCHEMA,
     constraints=INTRADAY_STOCK_DATA_TABLE_CONSTRAINTS
 )
 
 create_table_with_schema(
     connection=conn,
-    table_name=STOCK_SMA_DATA_TABLE_NAME,
-    schema=STOCK_SMA_DATA_TABLE_SCHEMA,
+    db_schema=DB_RAW_DATA_SCHEMA,
+    db_table_name=STOCK_SMA_DATA_TABLE_NAME,
+    db_table_schema_definition=STOCK_SMA_DATA_TABLE_SCHEMA,
     constraints=STOCK_SMA_DATA_TABLE_CONSTRAINTS
 )
 
@@ -79,9 +82,10 @@ for symbol in stocks:
         )
         insert_data(
             connection=conn,
-            table_name=INTRADAY_STOCK_DATA_TABLE_NAME,
-            columns=['symbol', 'datetime', 'open', 'high', 'low', 'close', 'volume'],
-            data=data_values,
+            db_schema=DB_RAW_DATA_SCHEMA,
+            db_table_name=INTRADAY_STOCK_DATA_TABLE_NAME,
+            table_columns=['symbol', 'datetime', 'open', 'high', 'low', 'close', 'volume'],
+            table_data=data_values,
             on_conflict_action='ON CONFLICT (symbol, datetime) DO NOTHING'
         )
 
@@ -96,9 +100,10 @@ for symbol in stocks:
             )
             insert_data(
                 connection=conn,
-                table_name=STOCK_SMA_DATA_TABLE_NAME,
-                columns=['symbol', 'datetime', 'sma'],
-                data=data_values,
+                db_schema=DB_RAW_DATA_SCHEMA,
+                db_table_name=STOCK_SMA_DATA_TABLE_NAME,
+                table_columns=['symbol', 'datetime', 'sma'],
+                table_data=data_values,
                 on_conflict_action='ON CONFLICT (symbol, datetime) DO NOTHING'
             )
     except ValueError as e:

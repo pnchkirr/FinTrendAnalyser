@@ -1,4 +1,5 @@
 from utils.constants import (
+    DB_RAW_DATA_SCHEMA,
     HISTORICAL_STOCK_DATA_TABLE_NAME,
     HISTORICAL_STOCK_DATA_TABLE_SCHEMA,
     HISTORICAL_STOCK_DATA_TABLE_CONSTRAINTS
@@ -23,8 +24,9 @@ conn = get_db_connection()
 # Create table with the defined schema
 create_table_with_schema(
     connection=conn,
-    table_name=HISTORICAL_STOCK_DATA_TABLE_NAME,
-    schema=HISTORICAL_STOCK_DATA_TABLE_SCHEMA,
+    db_schema=DB_RAW_DATA_SCHEMA,
+    db_table_name=HISTORICAL_STOCK_DATA_TABLE_NAME,
+    db_table_schema_definition=HISTORICAL_STOCK_DATA_TABLE_SCHEMA,
     constraints=HISTORICAL_STOCK_DATA_TABLE_CONSTRAINTS
 )
 
@@ -91,9 +93,10 @@ for stock in stocks:
         )
         insert_data(
             conn,
-            HISTORICAL_STOCK_DATA_TABLE_NAME,
-            list(HISTORICAL_STOCK_DATA_TABLE_SCHEMA.keys()),
-            data_values
+            db_schema=DB_RAW_DATA_SCHEMA,
+            db_table_name=HISTORICAL_STOCK_DATA_TABLE_NAME,
+            table_columns=list(HISTORICAL_STOCK_DATA_TABLE_SCHEMA.keys()),
+            table_data=data_values
         )
     conn.commit()
 

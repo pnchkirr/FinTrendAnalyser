@@ -1,4 +1,5 @@
 from utils.constants import (
+    DB_RAW_DATA_SCHEMA,
     ECONOMIC_DATA_TABLE_SCHEMA,
     ECONOMIC_DATA_TABLE_NAME
 )
@@ -19,8 +20,9 @@ conn = get_db_connection()
 # Create table with the defined schema
 create_table_with_schema(
     connection=conn,
-    table_name=ECONOMIC_DATA_TABLE_NAME,
-    schema=ECONOMIC_DATA_TABLE_SCHEMA
+    db_schema=DB_RAW_DATA_SCHEMA,
+    db_table_name=ECONOMIC_DATA_TABLE_NAME,
+    db_table_schema_definition=ECONOMIC_DATA_TABLE_SCHEMA
 )
 
 # World Bank API endpoint and query parameters
@@ -54,9 +56,10 @@ if response.status_code == 200:
         )
         insert_data(
             connection=conn,
-            table_name=ECONOMIC_DATA_TABLE_NAME,
-            columns=list(ECONOMIC_DATA_TABLE_SCHEMA.keys()),
-            data=data_values
+            db_schema=DB_RAW_DATA_SCHEMA,
+            db_table_name=ECONOMIC_DATA_TABLE_NAME,
+            table_columns=list(ECONOMIC_DATA_TABLE_SCHEMA.keys()),
+            table_data=data_values
         )
     logger.info(f'Finished fetching and inserting economic data for {country_code}.')
 else:

@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from utils.constants import (
+    DB_RAW_DATA_SCHEMA,
     FINANCIAL_NEWS_TABLE_SCHEMA,
     FINANCIAL_NEWS_TABLE_NAME
 )
@@ -24,8 +25,9 @@ conn = get_db_connection()
 # Create table with the defined schema
 create_table_with_schema(
     connection=conn,
-    table_name=FINANCIAL_NEWS_TABLE_NAME,
-    schema=FINANCIAL_NEWS_TABLE_SCHEMA
+    db_schema=DB_RAW_DATA_SCHEMA,
+    db_table_name=FINANCIAL_NEWS_TABLE_NAME,
+    db_table_schema_definition=FINANCIAL_NEWS_TABLE_SCHEMA
 )
 
 api_key = os.getenv('NEWS_API_KEY')
@@ -60,9 +62,10 @@ for company in companies:
             )
             insert_data(
                 connection=conn,
-                table_name=FINANCIAL_NEWS_TABLE_NAME,
-                columns=list(FINANCIAL_NEWS_TABLE_SCHEMA.keys()),
-                data=data_values
+                db_schema=DB_RAW_DATA_SCHEMA,
+                db_table_name=FINANCIAL_NEWS_TABLE_NAME,
+                table_columns=list(FINANCIAL_NEWS_TABLE_SCHEMA.keys()),
+                table_data=data_values
             )
         logger.info(f"Finished fetching and inserting articles for {company}.")
     else:
